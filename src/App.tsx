@@ -43,6 +43,9 @@ function App() {
           <Card key={user.id} email={user.email} phone={user.phone} username={user.username} />
         ))}
       </section>
+      {filteredUsers.length === 0 && (
+        <div className="flex justify-center">there are no users with this name</div>
+      )}
     </main>
   )
 }
