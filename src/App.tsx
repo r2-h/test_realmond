@@ -4,6 +4,7 @@ import { User } from "./types"
 
 function App() {
   const [users, setUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState(false)
   const [usersName, setUsersName] = useState<string>("")
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
 
@@ -12,6 +13,7 @@ function App() {
   }
 
   useEffect(() => {
+    setLoading(true)
     const fetchUsers = async () => {
       fetch("https://fakestoreapi.com/users?limit=9")
         .then((res) => res.json())
@@ -19,6 +21,8 @@ function App() {
           setUsers(json)
           setFilteredUsers(json)
         })
+        .catch((e) => console.error("error", e))
+        .finally(() => setLoading(false))
     }
     fetchUsers()
   }, [])
@@ -38,13 +42,18 @@ function App() {
         value={usersName}
         placeholder="find user by name"
       />
+
       <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 justify-center mx-auto justify-items-center">
         {filteredUsers.map((user) => (
           <Card key={user.id} email={user.email} phone={user.phone} username={user.username} />
         ))}
       </section>
-      {filteredUsers.length === 0 && (
-        <div className="flex justify-center">there are no users with this name</div>
+      {loading ? (
+        <div className="flex justify-center">Loading...</div>
+      ) : (
+        filteredUsers.length === 0 && (
+          <div className="flex justify-center">there are no users with this name</div>
+        )
       )}
     </main>
   )
