@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     setLoading(true)
-    const fetchUsers = async () => {
+    const fetchUsers = () => {
       fetch("https://fakestoreapi.com/users?limit=9")
         .then((res) => res.json())
         .then((json) => {
@@ -31,7 +31,7 @@ function App() {
     const lowercasedFilter = usersName.toLowerCase()
     const filteredData = users.filter((user) => user.username.toLowerCase().includes(lowercasedFilter))
     setFilteredUsers(filteredData)
-  }, [usersName])
+  }, [usersName, users])
 
   return (
     <main className="min-h-screen px-4 py-5 sm:px-10 xl:px-20 mx-auto ">
@@ -43,7 +43,7 @@ function App() {
         placeholder="find user by name"
       />
 
-      <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 justify-center mx-auto justify-items-center">
+      <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 mx-auto justify-items-center">
         {filteredUsers.map((user) => (
           <Card key={user.id} email={user.email} phone={user.phone} username={user.username} />
         ))}
