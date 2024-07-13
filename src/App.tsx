@@ -46,7 +46,7 @@ function App() {
     <main className="min-h-screen px-4 py-5 sm:px-10 xl:px-20 mx-auto ">
       <h1 className="font-bold text-5xl text-center ">Users</h1>
       <input
-        className="w-[300px] h-[40px] border border-slate-400 flex  my-8 mx-auto rounded-md px-4"
+        className="w-[300px] h-[40px] border border-slate-400 flex my-8 mx-auto rounded-md px-4"
         onChange={handleSearch}
         value={searchTitle}
         placeholder="find user by name"
@@ -55,7 +55,7 @@ function App() {
       <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 mx-auto justify-items-center">
         {filteredUsers.map((user) => (
           <Card
-            className={`${user.username === active && 'border-red-500 bg-red-300'}`}
+            className={`${user.username === active && 'bg-red-300'}`}
             key={user.id}
             email={user.email}
             phone={user.phone}
