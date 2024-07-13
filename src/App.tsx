@@ -1,37 +1,46 @@
-import { ChangeEvent, useEffect, useState } from "react"
-import { Card } from "./components/Card"
-import { User } from "./types"
+import {ChangeEvent, useEffect, useState} from 'react'
+import {Card} from './components/Card'
+import {User} from './types'
 
 function App() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(false)
-  const [usersName, setUsersName] = useState<string>("")
+  const [searchTitle, setSearchTitle] = useState<string>('')
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+  const [active, setActive] = useState('')
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsersName(e.target.value)
+    setSearchTitle(e.target.value)
+  }
+
+  const cardHandler = (username: string) => {
+    setActive(username)
   }
 
   useEffect(() => {
     setLoading(true)
     const fetchUsers = () => {
-      fetch("https://fakestoreapi.com/users?limit=9")
+      fetch('https://fakestoreapi.com/users?limit=9')
         .then((res) => res.json())
         .then((json) => {
           setUsers(json)
           setFilteredUsers(json)
         })
-        .catch((e) => console.error("error", e))
+        .catch((e) => console.error('error', e))
         .finally(() => setLoading(false))
     }
     fetchUsers()
   }, [])
 
   useEffect(() => {
-    const lowercasedFilter = usersName.toLowerCase()
-    const filteredData = users.filter((user) => user.username.toLowerCase().includes(lowercasedFilter))
+    const filteredData = users.filter((user) => {
+      const filter = user.username.toLowerCase().includes(searchTitle)
+      const phone = user.phone.toLowerCase().includes(searchTitle)
+      const email = user.email.toLowerCase().includes(searchTitle)
+      return filter || phone || email
+    })
     setFilteredUsers(filteredData)
-  }, [usersName, users])
+  }, [searchTitle, users])
 
   return (
     <main className="min-h-screen px-4 py-5 sm:px-10 xl:px-20 mx-auto ">
@@ -39,13 +48,20 @@ function App() {
       <input
         className="w-[300px] h-[40px] border border-slate-400 flex  my-8 mx-auto rounded-md px-4"
         onChange={handleSearch}
-        value={usersName}
+        value={searchTitle}
         placeholder="find user by name"
       />
 
       <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 mx-auto justify-items-center">
         {filteredUsers.map((user) => (
-          <Card key={user.id} email={user.email} phone={user.phone} username={user.username} />
+          <Card
+            className={`${user.username === active && 'border-red-500 bg-red-300'}`}
+            key={user.id}
+            email={user.email}
+            phone={user.phone}
+            username={user.username}
+            cardHandler={cardHandler}
+          />
         ))}
       </section>
       {loading ? (
